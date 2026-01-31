@@ -1,6 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
-import { Settings, LogOut, Bell, Shield, HelpCircle, ChevronRight } from 'lucide-react';
+import { Settings, LogOut, Bell, Shield, HelpCircle, ChevronRight, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useState, useEffect } from 'react';
 
@@ -31,13 +32,39 @@ const ProfilePage = () => {
     navigate('/');
   };
 
+  const handleShare = () => {
+    // Create shareable link with query params
+    const params = new URLSearchParams({
+      name: user.name,
+      points: user.points.toString(),
+      co2: user.co2Saved.toString(),
+      badges: user.badges.toString(),
+      level: user.level
+    });
+    
+    const shareUrl = `${window.location.origin}/share?${params.toString()}`;
+    
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      toast.success('Profile link copied!', {
+        description: 'Anyone with this link can view your stats.',
+      });
+    });
+  };
+
   return (
     <AppLayout>
       <div className="p-4 space-y-4">
         {/* Profile Card */}
         <div className="lisboa-card text-center">
-          <div className="w-20 h-20 rounded-full bg-accent/20 flex items-center justify-center text-4xl mx-auto mb-4">
+          <div className="w-20 h-20 rounded-full bg-accent/20 flex items-center justify-center text-4xl mx-auto mb-4 relative">
             ⚡
+            <button 
+                onClick={handleShare}
+                className="absolute -right-2 -bottom-2 bg-coral text-white p-2 rounded-full shadow-lg hover:bg-coral/90 transition-colors"
+                title="Share Profile"
+            >
+                <Share2 size={16} />
+            </button>
           </div>
           <h1 className="text-xl font-bold text-foreground">{user.name}</h1>
           <p className="text-muted-foreground">{user.level}</p>

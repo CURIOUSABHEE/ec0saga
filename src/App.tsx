@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import SharedProfilePage from "./pages/SharedProfilePage";
 import DashboardPage from "./pages/DashboardPage";
 import TrackPage from "./pages/TrackPage";
 import LearnPage from "./pages/LearnPage";
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/share" element={<SharedProfilePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/track" element={<TrackPage />} />
           <Route path="/learn" element={<LearnPage />} />
