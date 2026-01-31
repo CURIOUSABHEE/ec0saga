@@ -2,8 +2,29 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Settings, LogOut, Bell, Shield, HelpCircle, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+import { useState, useEffect } from 'react';
+
 const ProfilePage = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState({
+    name: 'Team Runtime',
+    level: 'Eco Guardian • Level 3',
+    points: 1890,
+    co2Saved: 40,
+    badges: 3
+  });
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user_profile');
+    if (storedUser) {
+      const parsed = JSON.parse(storedUser);
+      setUser(prev => ({
+        ...prev,
+        name: parsed.name || prev.name,
+        // In a real app we'd fetch points/level too
+      }));
+    }
+  }, []);
 
   const handleSignout = () => {
     // Clear any auth state here if implemented
@@ -18,20 +39,20 @@ const ProfilePage = () => {
           <div className="w-20 h-20 rounded-full bg-accent/20 flex items-center justify-center text-4xl mx-auto mb-4">
             ⚡
           </div>
-          <h1 className="text-xl font-bold text-foreground">Team Runtime</h1>
-          <p className="text-muted-foreground">Eco Guardian • Level 3</p>
+          <h1 className="text-xl font-bold text-foreground">{user.name}</h1>
+          <p className="text-muted-foreground">{user.level}</p>
           
           <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-border">
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">1,890</p>
+              <p className="text-2xl font-bold text-foreground">{user.points.toLocaleString()}</p>
               <p className="text-xs text-muted-foreground">Points</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">40 kg</p>
+              <p className="text-2xl font-bold text-foreground">{user.co2Saved} kg</p>
               <p className="text-xs text-muted-foreground">CO₂ Saved</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">3</p>
+              <p className="text-2xl font-bold text-foreground">{user.badges}</p>
               <p className="text-xs text-muted-foreground">Badges</p>
             </div>
           </div>

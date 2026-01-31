@@ -15,6 +15,23 @@ const navItems = [
 export const Sidebar = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [userName, setUserName] = useState('User');
+
+  // Simple effect to read user name if available (pseudo-auth state)
+  // In a real app, use AuthContext
+  if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('user_profile');
+      if (stored) {
+          try {
+              const parsed = JSON.parse(stored);
+              if (parsed.name && parsed.name !== userName) {
+                  setUserName(parsed.name);
+              }
+          } catch (e) {
+              // ignore
+          }
+      }
+  }
 
   return (
     <aside
@@ -86,7 +103,7 @@ export const Sidebar = () => {
             </div>
             {!collapsed && (
                 <div className="flex flex-col overflow-hidden">
-                    <span className="text-sm font-medium truncate">User</span>
+                    <span className="text-sm font-medium truncate">{userName}</span>
                     <span className="text-xs text-muted-foreground truncate">user@example.com</span>
                 </div>
             )}

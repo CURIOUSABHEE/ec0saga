@@ -72,8 +72,20 @@ const RegisterPage = () => {
     e.preventDefault();
     
     if (validateForm()) {
+      // Save to localStorage for persistence
+      const userData = {
+        name,
+        mobile: mobileNumber,
+        joinedDate: new Date().toISOString(),
+        level: 'Eco Guardian', // Default
+        points: 0,
+        co2Saved: 0,
+        badges: 0
+      };
+      localStorage.setItem('user_profile', JSON.stringify(userData));
+      
       // In a real app, send registration data to backend
-      console.log('Register successful', { name, mobileNumber, pin: pin.join('') });
+      console.log('Register successful', userData);
       navigate('/dashboard');
     }
   };

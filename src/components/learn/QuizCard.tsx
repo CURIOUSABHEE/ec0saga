@@ -16,6 +16,10 @@ export const QuizCard = ({ questions, onComplete }: QuizCardProps) => {
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
 
+  if (!questions || questions.length === 0) {
+    return <div className="lisboa-card text-center text-muted-foreground">Loading quiz...</div>;
+  }
+
   const question = questions[currentQuestion];
   const isCorrect = selectedAnswer === question.correct;
   const isLastQuestion = currentQuestion === questions.length - 1;
