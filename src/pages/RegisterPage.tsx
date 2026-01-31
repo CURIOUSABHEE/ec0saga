@@ -77,7 +77,7 @@ const RegisterPage = () => {
         name,
         mobile: mobileNumber,
         joinedDate: new Date().toISOString(),
-        level: 'Eco Guardian', // Default
+        level: 'Eco Scout • Level 1', // Default
         points: 0,
         co2Saved: 0,
         badges: 0

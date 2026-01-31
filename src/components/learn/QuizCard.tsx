@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 import { Question } from '@/data/quizQuestions';
+import { addPoints } from '@/lib/userData';
 
 interface QuizCardProps {
   questions: Question[];
@@ -32,6 +33,7 @@ export const QuizCard = ({ questions, onComplete }: QuizCardProps) => {
     
     if (index === question.correct) {
       setScore(score + 50);
+      addPoints(50);
       toast.success('+50 points!');
     }
   };

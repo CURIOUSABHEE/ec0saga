@@ -29,7 +29,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
         description: randomTip,
         duration: 4000, // Show for a bit longer so they can read it
       });
-    }, 2000); // Every 2 seconds
+    }, 60000); // Every 1 minute
 
     return () => clearInterval(interval);
   }, []);

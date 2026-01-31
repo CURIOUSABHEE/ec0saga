@@ -9,10 +9,10 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({
     name: 'Team Runtime',
-    level: 'Eco Guardian • Level 3',
-    points: 1890,
-    co2Saved: 40,
-    badges: 3
+    level: 'Eco Scout • Level 1',
+    points: 0,
+    co2Saved: 0,
+    badges: 0
   });
 
   useEffect(() => {

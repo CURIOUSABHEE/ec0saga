@@ -5,6 +5,7 @@ import { JourneyForm } from '@/components/tracker/JourneyForm';
 import { WeeklyChart } from '@/components/tracker/WeeklyChart';
 
 import { TransportType } from '@/components/tracker/TransportSelector';
+import { addPoints, addCo2Saved } from '@/lib/userData';
 
 interface JourneyData {
   transport: TransportType;
@@ -13,14 +14,7 @@ interface JourneyData {
   date: string;
 }
 
-const INITIAL_DATA: JourneyData[] = [
-  // Simulating previous days for the chart
-  { transport: 'car', distance: 20, emissions: 4.2, date: new Date(Date.now() - 5 * 86400000).toISOString() }, // Mon
-  { transport: 'bus', distance: 15, emissions: 2.8, date: new Date(Date.now() - 4 * 86400000).toISOString() }, // Tue
-  { transport: 'car', distance: 25, emissions: 5.1, date: new Date(Date.now() - 3 * 86400000).toISOString() }, // Wed
-  { transport: 'train', distance: 30, emissions: 3.5, date: new Date(Date.now() - 2 * 86400000).toISOString() }, // Thu
-  { transport: 'car', distance: 30, emissions: 6.2, date: new Date(Date.now() - 1 * 86400000).toISOString() }, // Fri
-];
+const INITIAL_DATA: JourneyData[] = [];
 
 const TrackPage = () => {
   const [journeys, setJourneys] = useState<JourneyData[]>(INITIAL_DATA);
@@ -76,6 +70,10 @@ const TrackPage = () => {
 
   const handleAddJourney = (journey: JourneyData) => {
     setJourneys([...journeys, journey]);
+    
+    // Add points for tracking activity
+    addPoints(10); 
+    addCo2Saved(journey.emissions);
     // update chart data logic would go here
   };
   

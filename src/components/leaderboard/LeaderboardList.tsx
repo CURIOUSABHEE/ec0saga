@@ -1,4 +1,6 @@
 import { cn } from '@/lib/utils';
+import { getUserData } from '@/lib/userData';
+import { useState, useEffect } from 'react';
 
 interface User {
   id: number;
@@ -10,7 +12,7 @@ interface User {
 
 const users: User[] = [
   { id: 1, name: 'Sarah Green', avatar: '🌿', score: 2450 },
-  { id: 2, name: 'Team Runtime', avatar: '⚡', score: 1890, isCurrentUser: true },
+  { id: 2, name: 'Team Runtime', avatar: '⚡', score: 0, isCurrentUser: true },
   { id: 3, name: 'EcoWarrior42', avatar: '🌍', score: 1654 },
   { id: 4, name: 'GreenThumb', avatar: '🌱', score: 1432 },
   { id: 5, name: 'BikeLife', avatar: '🚴', score: 1298 },
@@ -33,9 +35,40 @@ const getRankBadge = (rank: number) => {
 };
 
 export const LeaderboardList = () => {
+  const [leaderboardData, setLeaderboardData] = useState<User[]>(users);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+        const userData = getUserData();
+        if (userData) {
+            // Remove mock "Team Runtime" or existing user entry to avoid dupes if we were using real IDs
+            // For now, we'll just replace the entry that is flagged as current user or add new
+            
+            const realUser: User = { 
+                id: 999, 
+                name: userData.name || 'You', 
+                avatar: '⚡', 
+                score: userData.points || 0, 
+                isCurrentUser: true 
+            };
+
+            const others = users.filter(u => !u.isCurrentUser);
+            const newList = [...others, realUser].sort((a, b) => b.score - a.score);
+            setLeaderboardData(newList);
+        }
+    };
+
+    // Initial load
+    handleUpdate();
+
+    // Listen for updates
+    window.addEventListener('user-data-updated', handleUpdate);
+    return () => window.removeEventListener('user-data-updated', handleUpdate);
+  }, []);
+
   return (
     <div className="space-y-3">
-      {users.map((user, index) => {
+      {leaderboardData.map((user, index) => {
         const rank = index + 1;
         
         return (
