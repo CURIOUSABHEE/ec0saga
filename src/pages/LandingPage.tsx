@@ -73,7 +73,7 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="relative z-10 py-6 text-center">
         <p className="text-sm text-[#064E3B]/60 font-medium">
-          ClimateChange+ by Team Runtime
+          ec0saga by Team Runtime
         </p>
       </footer>
     </div>
