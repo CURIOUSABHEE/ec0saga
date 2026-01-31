@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label';
 const LoginPage = () => {
   const navigate = useNavigate();
   const [mobileNumber, setMobileNumber] = useState('');
-  const [pin, setPin] = useState(['', '']);
+  const [pin, setPin] = useState(['', '', '', '', '', '']);
+  const [errors, setErrors] = useState<{ mobile?: string; pin?: string }>({});
 
   const handlePinChange = (index: number, value: string) => {
     if (value.length > 1) return;
@@ -16,9 +17,11 @@ const LoginPage = () => {
     const newPin = [...pin];
     newPin[index] = value;
     setPin(newPin);
+    
+    if (errors.pin) setErrors({ ...errors, pin: undefined });
 
     // Auto-focus next input
-    if (value && index < 1) {
+    if (value && index < 5) {
       const nextInput = document.getElementById(`pin-${index + 1}`);
       nextInput?.focus();
     }
@@ -31,10 +34,38 @@ const LoginPage = () => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors: { mobile?: string; pin?: string } = {};
+    let isValid = true;
+
+    // Mobile validation (Basic check for length and numeric)
+    const mobileRegex = /^\+?[0-9\s-]{10,15}$/;
+    if (!mobileNumber.trim()) {
+      newErrors.mobile = 'Mobile number is required';
+      isValid = false;
+    } else if (!mobileRegex.test(mobileNumber)) {
+      newErrors.mobile = 'Please enter a valid mobile number';
+      isValid = false;
+    }
+
+    // PIN validation
+    if (pin.some((digit) => digit === '')) {
+      newErrors.pin = 'Please enter all 6 digits of your PIN';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, validate credentials here
-    navigate('/dashboard');
+    
+    if (validateForm()) {
+      // In a real app, validate credentials here
+      console.log('Login successful', { mobileNumber, pin: pin.join('') });
+      navigate('/dashboard');
+    }
   };
 
   return (
@@ -75,17 +106,25 @@ const LoginPage = () => {
               type="tel"
               placeholder="+351 912 345 678"
               value={mobileNumber}
-              onChange={(e) => setMobileNumber(e.target.value)}
-              className="h-14 rounded-2xl border-2 border-primary/20 bg-cream text-foreground text-lg font-medium placeholder:text-muted-foreground focus:border-primary"
+              onChange={(e) => {
+                setMobileNumber(e.target.value);
+                if (errors.mobile) setErrors({ ...errors, mobile: undefined });
+              }}
+              className={`h-14 rounded-2xl border-2 bg-cream text-foreground text-lg font-medium placeholder:text-muted-foreground focus:border-primary ${
+                errors.mobile ? 'border-red-500 focus:ring-red-500/20' : 'border-primary/20'
+              }`}
             />
+            {errors.mobile && (
+              <p className="text-sm text-red-500 font-medium ml-1">{errors.mobile}</p>
+            )}
           </div>
 
-          {/* 2-Digit PIN */}
+          {/* 6-Digit PIN */}
           <div className="space-y-2">
             <Label className="text-foreground font-semibold">
-              2-Digit PIN
+              6-Digit PIN
             </Label>
-            <div className="flex gap-4 justify-center">
+            <div className="flex gap-2 justify-center">
               {pin.map((digit, index) => (
                 <input
                   key={index}
@@ -96,10 +135,17 @@ const LoginPage = () => {
                   value={digit}
                   onChange={(e) => handlePinChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
-                  className="w-20 h-20 text-center text-3xl font-bold rounded-2xl border-2 border-primary/20 bg-cream text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className={`w-12 h-14 text-center text-2xl font-bold rounded-xl border-2 bg-cream text-foreground focus:border-primary focus:outline-none focus:ring-2 transition-all ${
+                    errors.pin 
+                      ? 'border-red-500 focus:ring-red-500/20' 
+                      : 'border-primary/20 focus:ring-primary/20'
+                  }`}
                 />
               ))}
             </div>
+            {errors.pin && (
+              <p className="text-sm text-red-500 font-medium text-center">{errors.pin}</p>
+            )}
           </div>
 
           {/* Login Button */}

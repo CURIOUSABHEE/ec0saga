@@ -1,7 +1,15 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Settings, LogOut, Bell, Shield, HelpCircle, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
+
+  const handleSignout = () => {
+    // Clear any auth state here if implemented
+    navigate('/');
+  };
+
   return (
     <AppLayout>
       <div className="p-4 space-y-4">
@@ -55,7 +63,10 @@ const ProfilePage = () => {
         </div>
 
         {/* Logout */}
-        <button className="w-full lisboa-card-soft flex items-center justify-center gap-2 text-destructive font-semibold">
+        <button 
+          onClick={handleSignout}
+          className="w-full lisboa-card-soft flex items-center justify-center gap-2 text-destructive font-semibold hover:bg-destructive/10 transition-colors"
+        >
           <LogOut size={18} strokeWidth={2.5} />
           Sign Out
         </button>

@@ -80,7 +80,7 @@ export const Sidebar = () => {
 
       {/* Optional User Info or Footer at bottom */}
       <div className="p-4 border-t border-border mt-auto">
-        <div className={cn("flex items-center gap-3", collapsed && "justify-center")}>
+        <Link to="/profile" className={cn("flex items-center gap-3 hover:bg-accent/50 p-2 rounded-lg transition-colors", collapsed && "justify-center")}>
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
                 <User size={16} className="text-primary" />
             </div>
@@ -90,7 +90,7 @@ export const Sidebar = () => {
                     <span className="text-xs text-muted-foreground truncate">user@example.com</span>
                 </div>
             )}
-        </div>
+        </Link>
       </div>
     </aside>
   );
