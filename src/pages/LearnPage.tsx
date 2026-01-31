@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { QuizCard } from '@/components/learn/QuizCard';
+import { quizPool, Question } from '@/data/quizQuestions';
+import { useEffect } from 'react';
 import { TipsCarousel } from '@/components/learn/TipsCarousel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BookOpen, Lightbulb, FileText, Video, Image, Play, ArrowLeft, ExternalLink, X, Clock, Share2 } from 'lucide-react';
@@ -83,6 +85,13 @@ const LearnPage = () => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<any | null>(null);
   const [selectedInfographic, setSelectedInfographic] = useState<any | null>(null);
+  const [dailyQuestions, setDailyQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    // Randomly select 5 questions on mount
+    const shuffled = [...quizPool].sort(() => 0.5 - Math.random());
+    setDailyQuestions(shuffled.slice(0, 5));
+  }, []);
 
   return (
     <AppLayout>
@@ -211,7 +220,7 @@ const LearnPage = () => {
             <p className="text-sm text-muted-foreground">Earn 50 points</p>
           </div>
         </div>
-        <QuizCard />
+        <QuizCard questions={dailyQuestions} />
 
         <div className="flex items-center gap-3 mb-2 mt-6">
           <div className="w-10 h-10 rounded-2xl bg-[#84CC16]/20 flex items-center justify-center">

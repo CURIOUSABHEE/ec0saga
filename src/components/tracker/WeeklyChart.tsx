@@ -1,17 +1,12 @@
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
 
-const weeklyData = [
-  { day: 'Mon', value: 4.2 },
-  { day: 'Tue', value: 2.8 },
-  { day: 'Wed', value: 5.1 },
-  { day: 'Thu', value: 3.5 },
-  { day: 'Fri', value: 6.2 },
-  { day: 'Sat', value: 1.2 },
-  { day: 'Sun', value: 0.8 },
-];
+interface WeeklyChartProps {
+  data: { day: string; value: number }[];
+}
 
-export const WeeklyChart = () => {
-  const average = weeklyData.reduce((sum, d) => sum + d.value, 0) / weeklyData.length;
+export const WeeklyChart = ({ data }: WeeklyChartProps) => {
+  const average = data.length > 0 ? data.reduce((sum, d) => sum + d.value, 0) / data.length : 0;
+  const total = data.reduce((sum, d) => sum + d.value, 0);
 
   return (
     <div className="lisboa-card">
@@ -22,7 +17,7 @@ export const WeeklyChart = () => {
         </div>
         <div className="text-right">
           <p className="text-2xl font-bold text-foreground">
-            {weeklyData.reduce((sum, d) => sum + d.value, 0).toFixed(1)}
+            {total.toFixed(1)}
           </p>
           <p className="text-xs text-muted-foreground">kg total</p>
         </div>
@@ -30,7 +25,7 @@ export const WeeklyChart = () => {
 
       <div className="h-48 -mx-2">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={weeklyData} barCategoryGap="20%">
+          <BarChart data={data} barCategoryGap="20%">
             <XAxis 
               dataKey="day" 
               axisLine={false} 
@@ -42,7 +37,7 @@ export const WeeklyChart = () => {
               dataKey="value" 
               radius={[8, 8, 8, 8]}
             >
-              {weeklyData.map((entry, index) => (
+              {data.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`}
                   fill={entry.value > average ? 'hsl(27 97% 61%)' : 'hsl(82 78% 44%)'}

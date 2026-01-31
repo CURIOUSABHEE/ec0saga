@@ -4,11 +4,12 @@ import { Leaf, ArrowLeft } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const navigate = useNavigate();
+  const [name, setName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
   const [pin, setPin] = useState(['', '', '', '', '', '']);
-  const [errors, setErrors] = useState<{ mobile?: string; pin?: string }>({});
+  const [errors, setErrors] = useState<{ name?: string; mobile?: string; pin?: string }>({});
 
   const handlePinChange = (index: number, value: string) => {
     if (value.length > 1) return;
@@ -35,10 +36,19 @@ const LoginPage = () => {
   };
 
   const validateForm = () => {
-    const newErrors: { mobile?: string; pin?: string } = {};
+    const newErrors: { name?: string; mobile?: string; pin?: string } = {};
     let isValid = true;
 
-    // Mobile validation (Basic check for length and numeric)
+    // Name validation
+    if (!name.trim()) {
+      newErrors.name = 'Full name is required';
+      isValid = false;
+    } else if (name.trim().length < 3) {
+      newErrors.name = 'Name must be at least 3 characters';
+      isValid = false;
+    }
+
+    // Mobile validation
     const mobileRegex = /^\+?[0-9\s-]{10,15}$/;
     if (!mobileNumber.trim()) {
       newErrors.mobile = 'Mobile number is required';
@@ -58,12 +68,12 @@ const LoginPage = () => {
     return isValid;
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (validateForm()) {
-      // In a real app, validate credentials here
-      console.log('Login successful', { mobileNumber, pin: pin.join('') });
+      // In a real app, send registration data to backend
+      console.log('Register successful', { name, mobileNumber, pin: pin.join('') });
       navigate('/dashboard');
     }
   };
@@ -86,16 +96,39 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Login Card */}
+      {/* Register Card */}
       <div className="lisboa-card w-full max-w-sm">
         <h1 className="text-2xl font-bold text-foreground text-center mb-2">
-          Welcome Back
+          Create Account
         </h1>
         <p className="text-muted-foreground text-center mb-8">
-          Sign in to continue your journey
+          Join the movement today
         </p>
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleRegister} className="space-y-6">
+          {/* Full Name */}
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-foreground font-semibold">
+              Full Name
+            </Label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="John Doe"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (errors.name) setErrors({ ...errors, name: undefined });
+              }}
+              className={`h-14 rounded-2xl border-2 bg-cream text-foreground text-lg font-medium placeholder:text-muted-foreground focus:border-primary ${
+                errors.name ? 'border-red-500 focus:ring-red-500/20' : 'border-primary/20'
+              }`}
+            />
+            {errors.name && (
+              <p className="text-sm text-red-500 font-medium ml-1">{errors.name}</p>
+            )}
+          </div>
+
           {/* Mobile Number */}
           <div className="space-y-2">
             <Label htmlFor="mobile" className="text-foreground font-semibold">
@@ -148,20 +181,20 @@ const LoginPage = () => {
             )}
           </div>
 
-          {/* Login Button */}
+          {/* Register Button */}
           <button
             type="submit"
             className="btn-jungle w-full text-lg"
           >
-            Login
+            Sign Up
           </button>
         </form>
 
         {/* Help Text */}
         <p className="text-center text-sm text-muted-foreground mt-6">
-          New to ClimateChange+?{' '}
-          <Link to="/register" className="text-coral font-semibold hover:underline">
-            Create Account
+          Already have an account?{' '}
+          <Link to="/login" className="text-coral font-semibold hover:underline">
+            Login
           </Link>
         </p>
       </div>
@@ -169,4 +202,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

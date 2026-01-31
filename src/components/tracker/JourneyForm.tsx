@@ -13,7 +13,18 @@ const emissionFactors: Record<TransportType, number> = {
   car: 0.21,
 };
 
-export const JourneyForm = () => {
+interface JourneyData {
+  transport: TransportType;
+  distance: number;
+  emissions: number;
+  date: string;
+}
+
+interface JourneyFormProps {
+  onAddJourney?: (journey: JourneyData) => void;
+}
+
+export const JourneyForm = ({ onAddJourney }: JourneyFormProps) => {
   const [transport, setTransport] = useState<TransportType | null>(null);
   const [distance, setDistance] = useState(10);
   const [mileage, setMileage] = useState(15);
@@ -43,6 +54,15 @@ export const JourneyForm = () => {
       return;
     }
     
+    if (onAddJourney && transport && calculated !== null) {
+      onAddJourney({
+        transport,
+        distance,
+        emissions: calculated,
+        date: new Date().toISOString()
+      });
+    }
+
     toast.success('Journey added to your log!');
     setTransport(null);
     setDistance(10);

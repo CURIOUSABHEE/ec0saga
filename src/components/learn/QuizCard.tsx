@@ -3,35 +3,14 @@ import { Check, X, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
-interface Question {
-  id: number;
-  question: string;
-  options: string[];
-  correct: number;
+import { Question } from '@/data/quizQuestions';
+
+interface QuizCardProps {
+  questions: Question[];
+  onComplete?: (score: number) => void;
 }
 
-const questions: Question[] = [
-  {
-    id: 1,
-    question: "Which mode of transport has the lowest carbon footprint?",
-    options: ["Electric Car", "Bus", "Bicycle", "Train"],
-    correct: 2,
-  },
-  {
-    id: 2,
-    question: "What percentage of global emissions come from transportation?",
-    options: ["5%", "16%", "25%", "40%"],
-    correct: 1,
-  },
-  {
-    id: 3,
-    question: "How much CO₂ does planting one tree absorb per year?",
-    options: ["5 kg", "10 kg", "22 kg", "50 kg"],
-    correct: 2,
-  },
-];
-
-export const QuizCard = () => {
+export const QuizCard = ({ questions, onComplete }: QuizCardProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -61,6 +40,7 @@ export const QuizCard = () => {
       setShowResult(false);
       toast.success(`Quiz complete! You earned ${score} points!`);
       setScore(0);
+      if (onComplete) onComplete(score);
     } else {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
